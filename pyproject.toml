@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "lpm-discretize"
+version = "0.0.1"
+description = "A library for discretizing dataframes and csv files"
+license = "Apache-2.0"
+authors = ["Ulli Schaechtle <ulli@mit.edu>","Tim Burress <tim-burress@garage.co.jp>"]
+readme = "README.md"
+packages = [{include = "lpm_discretize",from = "src"}]
+repository = "https://github.com/inferenceql/lpm.discretize"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = "^2.1.1"
+polars = "^1.7.1"
+
+[tools.poetry.group.test.dependencies]
+pytest = "^8.3.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
