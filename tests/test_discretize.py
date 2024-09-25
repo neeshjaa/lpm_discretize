@@ -289,9 +289,9 @@ def test_discretize_column_with_get_quantile_based_discretization_function():
     f = get_quantile_based_discretization_function(column)
     assert discretize_column(column, f) == [
         "(a) very low (≤ 2.0)",
+        "(a) very low (≤ 2.0)",
         "(b) low (2.0 - 3.0)",
         "(c) high (3.0 - 4.0)",
-        "(d) very high (> 4.0)",
         "(d) very high (> 4.0)",  # that looks weird but is correct. See spot check above, too.
     ]
 
@@ -345,9 +345,9 @@ _df_expected = pl.DataFrame(
     {
         "foo": [
             "(a) very low (≤ 2.0)",
+            "(a) very low (≤ 2.0)",
             "(b) low (2.0 - 3.0)",
             "(c) high (3.0 - 4.0)",
-            "(d) very high (> 4.0)",
             "(d) very high (> 4.0)",
         ],
         "bar": _discrete_column,
@@ -430,16 +430,16 @@ def test_discretize_quantiles_spot_check_int_quartiles():
             {
                 "foo": [
                     "(a) very low (≤ 2.0)",
+                    "(a) very low (≤ 2.0)",
                     "(b) low (2.0 - 3.0)",
                     "(c) high (3.0 - 4.0)",
-                    "(d) very high (> 4.0)",
                     "(d) very high (> 4.0)",
                 ],
                 "bar": [
                     "(a) very low (≤ 6.0)",
+                    "(a) very low (≤ 6.0)",
                     "(b) low (6.0 - 7.0)",
                     "(c) high (7.0 - 8.0)",
-                    "(d) very high (> 8.0)",
                     "(d) very high (> 8.0)",
                 ],
                 "baz": _discrete_column,
@@ -449,15 +449,15 @@ def test_discretize_quantiles_spot_check_int_quartiles():
             {
                 "foo": [
                     "(d) very high (> 4.0)",
+                    "(a) very low (≤ 2.0)",
                     "(b) low (2.0 - 3.0)",
                     "(c) high (3.0 - 4.0)",
-                    "(d) very high (> 4.0)",
                 ],
                 "bar": [
                     "(a) very low (≤ 6.0)",
-                    "(c) high (7.0 - 8.0)",
                     "(b) low (6.0 - 7.0)",
-                    "(d) very high (> 8.0)",
+                    "(a) very low (≤ 6.0)",
+                    "(c) high (7.0 - 8.0)",
                 ],
                 "baz": _discrete_column[:-1],
             }
@@ -474,15 +474,15 @@ def test_discretize_quantiles_spot_check_quantiles_per_col():
             {
                 "foo": [
                     "(a) very low (≤ 2.0)",
+                    "(a) very low (≤ 2.0)",
                     "(b) low (2.0 - 3.0)",
                     "(c) high (3.0 - 4.0)",
-                    "(d) very high (> 4.0)",
                     "(d) very high (> 4.0)",
                 ],
                 "bar": [
                     "(a) low (≤ 7.0)",
                     "(a) low (≤ 7.0)",
-                    "(b) high (> 7.0)",
+                    "(a) low (≤ 7.0)",
                     "(b) high (> 7.0)",
                     "(b) high (> 7.0)",
                 ],
@@ -493,13 +493,13 @@ def test_discretize_quantiles_spot_check_quantiles_per_col():
             {
                 "foo": [
                     "(d) very high (> 4.0)",
+                    "(a) very low (≤ 2.0)",
                     "(b) low (2.0 - 3.0)",
                     "(c) high (3.0 - 4.0)",
-                    "(d) very high (> 4.0)",
                 ],
                 "bar": [
                     "(a) low (≤ 7.0)",
-                    "(b) high (> 7.0)",
+                    "(a) low (≤ 7.0)",
                     "(a) low (≤ 7.0)",
                     "(b) high (> 7.0)",
                 ],
@@ -509,3 +509,8 @@ def test_discretize_quantiles_spot_check_quantiles_per_col():
     ]
     assert_frame_equal(discretized_dfs[0], expected[0])
     assert_frame_equal(discretized_dfs[1], expected[1])
+
+def test_get_quantile_based_discretization_function_skewed():
+    column = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 20, 20]
+    f = get_quantile_based_discretization_function(column, quantiles=6)
+    assert f(0) == "(a) low (≤ 0.0)"
