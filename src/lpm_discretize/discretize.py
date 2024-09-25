@@ -102,7 +102,7 @@ def get_quantile_based_discretization_function(column, quantiles=4, decimals=1):
         set(
             [
                 quantile["breakpoint"]
-                for quantile in pl.Series(column).qcut(quantiles, include_breaks=True)
+                for quantile in pl.Series(column).qcut(quantiles, include_breaks=True, allow_duplicates=True)
             ]
         )
     )
@@ -111,7 +111,7 @@ def get_quantile_based_discretization_function(column, quantiles=4, decimals=1):
         assert not isinstance(value, str)
         if _is_number(value):
             for i, cutoff in enumerate(cutoffs[:-1]):
-                if value < cutoff:
+                if value <= cutoff:
                     if i == 0:
                         return _prefix_category_name(
                             i, len(cutoffs)
